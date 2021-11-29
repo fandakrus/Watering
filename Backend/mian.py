@@ -10,3 +10,4 @@ def water():
 def main():
     pass
 
+print("lojza")
