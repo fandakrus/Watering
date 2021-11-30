@@ -2,13 +2,33 @@ import socket
 import json
 from datetime import datetime
 from time import sleep
+import mariadb
 
 def write_to_database(data):
-    pass
+    # takes given data and write it to database on rpi
+    #connect to database password needs to be inserted
+    try:
+        conn = mariadb.connect(
+            user="root",
+            password="",
+            host="192.0.0.1",
+            port=3306,
+            database="watering"
+    )
+        print("Connected to database")
+    # if connection fails
+    except mariadb.Error as e:
+        print(f"Error connecting to MariaDB Platform: {e}")
+    # create cursor object on given connection
+    curr = conn.cursor()
+    # insert values to database
+    curr.execute("INSERT INTO sensors(soil_humidity, water_height) VALUES (?, ?)", (data["soil_humidity"], data["water_height"]))
+    # end the connection to database
+    conn.close()
+    
 
 def is_valid(data):
-    # confirm if data are ok recieved 
-    pass
+    return True
 
 
 class Meassurement():
@@ -20,7 +40,7 @@ class Meassurement():
         self.m_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # this binds socket to given port
         self.m_socket.bind(('', self.port))
-        # let socket listen and que up max 5 connections
+        # let socket listen and que up max 5 connections   
         self.m_socket.listen(5)        
 
 
