@@ -1,0 +1,26 @@
+    2  pwd
+    3  sudo apt update
+    4  sudo apt install apache2
+    6  sudo apt install ufw
+    7  sudo ufw app list
+    8  sudo ufw app info "Apache Full"
+    9  sudo ufw allow "Apache Full"
+   12  sudo apt install mariadb-server
+   14  sudo apt install php-mysql -y
+   15  sudo service apache2 restart
+   16  sudo mysql_secure_installation
+   17  sudo apt install phpmyadmin -y
+   18  sudo phpenmod mysqli
+   19  sudo service apache2 restart
+   20  ifconfig
+   21  ls
+   22  sudo ln -s /usr/share/phpmyadmin/ /var/www/html/phpmyadmin
+   23  cd /var/www/html/
+   24  ls
+   25  sudo nano index.html
+   26  cat phpmyadmin
+   27  cd phpmyadmin
+   29  ls
+   30  sudo service apache2 restart
+   31  sudo apt install php =y
+   32  sudo apt install php -y
