@@ -4,7 +4,7 @@ try:
     conn = mariadb.connect(
             user="root",
             password="",
-            host="192.168.0.193",
+            host="localhost",
             port=3306,
             database="watering"
     )
@@ -15,6 +15,15 @@ except mariadb.Error as e:
 # create cursor object on given connection
 curr = conn.cursor()
 # insert values to database
-curr.execute("INSERT INTO sensors(soil_humidity, water_height) VALUES (?, ?)", (2, 1))
+try:
+    curr.execute("INSERT INTO sensors(soil_humidity, water_height) VALUES (?, ?)", (2, 1))
+except mariadb.Error as e:
+    print(f"Could not write in data because of error: {e}")
+
+
+# curr.execute("SELECT soil_humidity, water_height FROM sensors")
+
+conn.commit()
+
 # end the connection to database
 conn.close()
