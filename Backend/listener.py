@@ -1,17 +1,14 @@
 import socket
 import json
-from datetime import datetime
-from time import sleep
 import mariadb
 
 def write_to_database(data):
     # takes given data and write it to database on rpi
-    #connect to database password needs to be inserted
-    try:
+    try:                         #connect to database -  password needs to be inserted
         conn = mariadb.connect(
             user="root",
-            password="",
-            host="192.0.0.1",
+            password="Thigelis2",
+            host="localhost",
             port=3306,
             database="watering"
     )
@@ -22,13 +19,19 @@ def write_to_database(data):
     # create cursor object on given connection
     curr = conn.cursor()
     # insert values to database
-    curr.execute("INSERT INTO sensors(soil_humidity, water_height) VALUES (?, ?)", (data["soil_humidity"], data["water_height"]))
+    try:
+        curr.execute("INSERT INTO sensors(soil_humidity, water_height) VALUES (?, ?)", (data["soil_humidity"], data["water_height"]))
+    except mariadb.Error as e:
+        print(f"Could not write in data because of error: {e}")
+    # makes the changes in given database
+    conn.commit()
     # end the connection to database
     conn.close()
     
 
 def is_valid(data):
     return True
+
 
 
 class Meassurement():
@@ -58,18 +61,13 @@ class Meassurement():
                 # there is tested if data are corect and then are writen to the database
                 if is_valid(self.results):
                     write_to_database(self.results)
-                    c.send('200')
+                    # c.send('200')
                 else:
-                    c.send('500')
+                    pass
+                    # c.send('500')
                 self.rcvData = None
                 self.results = None
                 c.close()
-
-
-
-    def pawel(self):
-        print('pawel')
-        sleep(4)
 
         
 def main():
