@@ -7,7 +7,7 @@ def write_to_database(data):
     try:                         #connect to database -  password needs to be inserted
         conn = mariadb.connect(
             user="root",
-            password="Thigelis2",
+            password="",
             host="localhost",
             port=3306,
             database="watering"
