@@ -70,7 +70,7 @@ def value_check(value):
 def is_valid(data):
     # check validity of data and return it to request data again or not
     try:
-        if value_check(int(data["water_height"])) and value_check(int(data["soil_humidity"])):
+        if value_check(float(data["water_height"])) and value_check(float(data["soil_humidity"])):
             return True    
     except KeyError:
         return False    
@@ -103,8 +103,8 @@ class Meassurement():
                 print(self.results)
                 # there is tested if data are corect and then are writen to the database
                 if is_valid(self.results):
-                    self.results["soil_humidity"] = int(self.results["soil_humidity"])
-                    self.results["water_height"] = int(self.results["water_height"])
+                    self.results["soil_humidity"] = float(self.results["soil_humidity"])
+                    self.results["water_height"] = float(self.results["water_height"])
                     write_to_database(self.results)
                     # c.send('200')
                 else:
