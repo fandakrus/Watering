@@ -19,7 +19,7 @@ def database_connect(name, count):
             port=3306,
             database=name
     )
-        logging.info("Connected to database")
+        logging.info(f"Succesfully connected to database {name}")
     # if connection fails
     except mariadb.Error as e:
         if count <= 100:
@@ -28,7 +28,7 @@ def database_connect(name, count):
         logging.error(f"Error connecting to MariaDB Platform: {e}")
         count += 1
         sleep(5)
-        # dangerous!! can cycle forever if connection is not made falls on recursion error
+        # dangerous!! can cycle forever if connection is made exit program
         return database_connect(name, count)
     # return connection to given database
     return conn
@@ -47,23 +47,6 @@ def write_to_database(data):
     conn.commit()
     # end the connection to database
     conn.close()
-
-"""
-This function is probably useless
-
-def percentige_check(key, value):
-    number_list = []
-    diff = 1000    # percentage that new value cant differ from the avrage
-    conn = database_connect("watering")
-    curr = conn.cursor()
-
-    try:
-        curr.execute(f"SELECT id, {key} FROM sensors ORDER BY id DESC LIMIT 20")
-    except mariadb.Error as e:
-        print(f"Could not get data from database: {e}")
-    for number in curr:
-        number_list.append(number)
-"""
 
 
 def value_check(value):
@@ -85,7 +68,6 @@ def is_valid(data):
     except KeyError:
         logging.error("Invalid params recieved")
         return False    
-
 
 
 class Meassurement():

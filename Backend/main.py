@@ -1,8 +1,13 @@
 import socket
 import sys
 import mariadb
+import logging
 
+
+# get args passed from shell to be processed
 args = sys.argv[1:]
+#configure logging
+logging.basicConfig(filename="/var/log/python-log/error-log", filemode="w", level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 def read_database(limit):
     soil_list = []
