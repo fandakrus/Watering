@@ -13,7 +13,8 @@ clientSocket.connect(("192.168.0.193", port))
 
 data = {
     "soil_humidity": 20,
-    "water_height": 58.4
+    "water_height": 58.4,
+    "float_sensor": True
 }
 
 json_data = json.dumps(data)

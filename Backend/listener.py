@@ -2,9 +2,14 @@ import socket
 import json
 import mariadb
 from time import sleep
+import logging
+import sys
+
+#configure logging to given file for better bug finding
+logging.basicConfig(filename="/var/log/python-log/error-log", filemode="w", level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 
-def database_connect(name):
+def database_connect(name, count):
     # connects to db and return given connection object
     try:                         
         conn = mariadb.connect(
@@ -14,26 +19,30 @@ def database_connect(name):
             port=3306,
             database=name
     )
-        print("Connected to database")
+        logging.info("Connected to database")
     # if connection fails
     except mariadb.Error as e:
-        print(f"Error connecting to MariaDB Platform: {e}")
+        if count <= 100:
+            logging.critical("Could not connect to DB")
+            sys.exit(1)
+        logging.error(f"Error connecting to MariaDB Platform: {e}")
+        count += 1
         sleep(5)
         # dangerous!! can cycle forever if connection is not made falls on recursion error
-        return database_connect(name)
+        return database_connect(name, count)
     # create cursor object on given connection
     return conn
 
 
 def write_to_database(data):
     # write data from sensors to database
-    conn = database_connect("watering")
+    conn = database_connect("watering", 0)
     curr = conn.cursor()
     # insert values to database
     try:
-        curr.execute("INSERT INTO sensors(soil_humidity, water_height) VALUES (?, ?)", (data["soil_humidity"]), data["water_height"])
+        curr.execute("INSERT INTO sensors(soil_humidity, water_height, float_sensor) VALUES (?, ?, ?)", (data["soil_humidity"], data["water_height"], data["float_sensor"]))
     except mariadb.Error as e:
-        print(f"Could not write in data because of error: {e}")
+        logging.error(f"Could not write in data because of error: {e}")
     # makes the changes in given database
     conn.commit()
     # end the connection to database
@@ -70,9 +79,11 @@ def value_check(value):
 def is_valid(data):
     # check validity of data and return it to request data again or not
     try:
-        if value_check(float(data["water_height"])) and value_check(float(data["soil_humidity"])):
-            return True    
+        if value_check(data["water_height"]) and value_check(data["soil_humidity"]):
+            if data["float_sensor"] == True or data["float_sensor"] == False:
+                return True
     except KeyError:
+        logging.error("Invalid params recieved")
         return False    
 
 
@@ -92,7 +103,7 @@ class Meassurement():
 
     def listen(self):
         # keep listening for the incoming traffic and hendle the connections
-        print(f"Socket is listening on port {self.port}.")
+        logging.info(f"Socket is listening on port {self.port}.")
         while True:
             c, addr = self.m_socket.accept()
             self.rcvData = c.recv(1024)
@@ -100,7 +111,6 @@ class Meassurement():
             if self.rcvData is not None:
                 # makes from recived json file data to further use
                 self.results = json.loads(self.rcvData.decode('utf-8'))
-                print(self.results)
                 # there is tested if data are corect and then are writen to the database
                 if is_valid(self.results):
                     self.results["soil_humidity"] = float(self.results["soil_humidity"])
