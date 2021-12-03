@@ -30,7 +30,7 @@ def database_connect(name, count):
         sleep(5)
         # dangerous!! can cycle forever if connection is not made falls on recursion error
         return database_connect(name, count)
-    # create cursor object on given connection
+    # return connection to given database
     return conn
 
 
