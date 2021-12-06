@@ -2,7 +2,6 @@ import socket
 import json
 from time import sleep
 import logging
-import sys
 from sensors import handle_sensors
 
 # configure logging to given file for better bug finding
@@ -22,21 +21,6 @@ class Listening():
         # let socket listen and que up max 5 connections   
         self.m_socket.listen(5)
 
-    def handle_data(self):
-        # makes from recived json file data to further use
-        self.results = json.loads(self.rcvData.decode('utf-8'))
-        # find what kind of data were ricieved
-        try:
-            self.type = self.results["type"]
-        except KeyError:
-            return False
-        if self.type == "sensors":
-            handle_sensors(self.results)
-        elif self.type == "web-ui":
-            pass
-        else:
-            return False
-    
     def listen(self):
         # keep listening for the incoming traffic and handle the connections
         logging.info(f"Socket is listening on port {self.port}.")
@@ -45,7 +29,7 @@ class Listening():
             self.rcvData = c.recv(1024)
             # activate when message is received
             if self.rcvData is not None:
-                if Listening.handle_data():
+                if self.handle_data():
                     # c.send('200')
                     pass
                 else:
@@ -54,6 +38,24 @@ class Listening():
                 self.rcvData = None
                 self.results = None
                 c.close()
+
+    def handle_data(self):
+        # makes from recived json file data to further use
+        self.results = json.loads(self.rcvData.decode('utf-8'))
+        # find what kind of data were ricieved
+        try:
+            self.type = self.results["type"]
+        except KeyError:
+            return False
+        # decide what script should bye     
+        if self.type == "sensors":
+            return handle_sensors(self.results)
+        elif self.type == "web-ui":
+            return True
+        else:
+            return False
+    
+
 
     
 
