@@ -5,20 +5,21 @@ from time import sleep
 import logging
 import sys
 
-#configure logging to given file for better bug finding
-logging.basicConfig(filename="/var/log/python-log/error-log", filemode="w", level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+# configure logging to given file for better bug finding
+logging.basicConfig(filename="/var/log/python-log/error-log", filemode="w", level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)-8s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 
 def database_connect(name, count):
     # connects to db and return given connection object
-    try:                         
+    try:
         conn = mariadb.connect(
             user="root",
             password="",
             host="localhost",
             port=3306,
             database=name
-    )
+        )
         logging.info(f"Succesfully connected to database {name}")
     # if connection fails
     except mariadb.Error as e:
@@ -40,7 +41,8 @@ def write_to_database(data):
     curr = conn.cursor()
     # insert values to database
     try:
-        curr.execute("INSERT INTO sensors(soil_humidity, water_height, float_sensor) VALUES (?, ?, ?)", (data["soil_humidity"], data["water_height"], data["float_sensor"]))
+        curr.execute("INSERT INTO sensors(soil_humidity, water_height, float_sensor) VALUES (?, ?, ?)",
+                     (data["soil_humidity"], data["water_height"], data["float_sensor"]))
     except mariadb.Error as e:
         logging.error(f"Could not write in data because of error: {e}")
     # makes the changes in given database
@@ -66,34 +68,33 @@ def is_valid(data):
             if data["float_sensor"] == True or data["float_sensor"] == False:
                 return True
     except KeyError:
-        logging.error("Invalid params recieved")
-        return False    
+        logging.error("Invalid params received")
+        return False
 
 
 class Meassurement():
 
     def __init__(self) -> None:
-        # port used for this comunication is 12345
+        # port used for this communication is 12345
         self.port = 12345
-        # make new socket used to listen to values from measurments
+        # make new socket used to listen to values from measurements
         self.m_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # this binds socket to given port
         self.m_socket.bind(('', self.port))
         # let socket listen and que up max 5 connections   
-        self.m_socket.listen(5)        
-
+        self.m_socket.listen(5)
 
     def listen(self):
-        # keep listening for the incoming traffic and hendle the connections
+        # keep listening for the incoming traffic and handle the connections
         logging.info(f"Socket is listening on port {self.port}.")
         while True:
             c, addr = self.m_socket.accept()
             self.rcvData = c.recv(1024)
-            # activate when message is recieved
+            # activate when message is received
             if self.rcvData is not None:
                 # makes from recived json file data to further use
                 self.results = json.loads(self.rcvData.decode('utf-8'))
-                # there is tested if data are corect and then are writen to the database
+                # there is tested if data are correct and then are writen to the database
                 if is_valid(self.results):
                     self.results["soil_humidity"] = float(self.results["soil_humidity"])
                     self.results["water_height"] = float(self.results["water_height"])
@@ -106,7 +107,7 @@ class Meassurement():
                 self.results = None
                 c.close()
 
-        
+
 def main():
     # creates new measurement unit
     meas = Meassurement()
