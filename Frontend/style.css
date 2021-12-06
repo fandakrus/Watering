@@ -19,3 +19,21 @@
   .my-inactive {
     color: red;
   }
+
+  .my-btn-container {
+    padding-top: 5%;
+  }
+
+  .my-sub-btn-container {
+    position: relative;
+    height: 200px;
+  }
+
+.my-btn-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
