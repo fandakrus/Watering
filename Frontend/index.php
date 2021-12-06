@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <link href="./main.css" rel="stylesheet">
+    <link href="./style.css" rel="stylesheet">
     <title>Voda</title>
 </head>
 
@@ -40,7 +40,7 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     <a class="nav-link active" aria-current="page" href="./index.php">Domov</a>
-                    <a class="nav-link" href="./control.php">Ovládání</a>
+                    <a class="nav-link" href="./controls.php">Ovládání</a>
                     <a class="nav-link" href="#">Historie</a>
                 </div>
             </div>
@@ -57,39 +57,51 @@
             <?php 
             $depth = $conn->query("SELECT id, water_height FROM sensors ORDER BY id DESC LIMIT 1");
             while($row = $depth->fetch_assoc()) {
-                echo "<p class='mdepth'>". $row["water_height"] ." m</p>";
+                echo "<p class='mdepth fs-1 mb-0'>". $row["water_height"] ." m</p>";
             }
             ?>
         </div>
     </div>
     <table class="table table-striped">
-        <th>
+        <thead>
             <td>Pořadí</td>
             <td>Hladina</td>
             <td>Vlhost</td>
             <td>Plovák</td>
             <td>Čas</td>
-        </th>
-        
+        </thead>
+        <tbody>
         <?php
             
-            $result = $conn->query("SELECT id, water_height, soil_humidity, float_sensor FROM sensors ORDER BY id DESC LIMIT 10");
+            $result = $conn->query("SELECT id, water_height, soil_humidity, float_sensor, meas_date FROM sensors ORDER BY id DESC LIMIT 10");
             $row_counter = 1;
+            if ($row["float_sensor"] == true) {
+                $dot = '<span class="my-active">●</span>';
+            } else {
+                $dot = '<span class="my-inactive">●</span>';
+            }
             while($row = $result->fetch_assoc()) {
+                $row_counter = 1;
+                if ($row["float_sensor"] == true) {
+                    $dot = '<span class="my-active">●</span>';
+                } else {
+                    $dot = '<span class="my-inactive">●</span>';
+                }
                 echo "<tr>
                     <td>". $row_counter ."</td>
                     <td>". $row["water_height"] ."</td>
                     <td>". $row["soil_humidity"] ."</td>
-                    <td>". $row["float_sensor"] ."</td>
-                    <td> 5 </td>
+                    <td>". $dot ."</td>
+                    <td>". $row["meas_date"]. "</td>
                 </tr>";
                 $row_counter += 1;
             }
             $conn->close;
 
         ?>
-        
+        </tbody>
     </table>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
 
 </html>

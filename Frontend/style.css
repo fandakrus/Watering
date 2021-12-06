@@ -11,3 +11,11 @@
 .mdepth {
     font-size: 5rem;
 }
+
+.my-active {
+    color: green;
+  }
+  
+  .my-inactive {
+    color: red;
+  }

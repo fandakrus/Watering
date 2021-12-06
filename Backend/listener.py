@@ -20,7 +20,7 @@ def database_connect(name, count):
             port=3306,
             database=name
         )
-        logging.info(f"Succesfully connected to database {name}")
+        logging.info(f"Successfully connected to database {name}")
     # if connection fails
     except mariadb.Error as e:
         if count <= 100:
