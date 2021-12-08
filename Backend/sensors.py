@@ -70,6 +70,7 @@ def is_valid(data):
         logging.error("Invalid params received")
         return False
 
+
 # most import func here control the others
 def handle_sensors(data):
     # there is tested if data are correct and then are writen to the database
@@ -80,4 +81,3 @@ def handle_sensors(data):
             return True
         else:
             return False
-            

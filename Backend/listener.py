@@ -29,6 +29,8 @@ class Listening():
             self.rcvData = c.recv(1024)
             # activate when message is received
             if self.rcvData is not None:
+                logging.info(f"Address {addr} connected.")
+                print("connection recieved")
                 if self.handle_data():
                     # c.send('200')
                     pass

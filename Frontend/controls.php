@@ -19,7 +19,7 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     <a class="nav-link" href="./index.php">Domov</a>
-                    <a class="nav-link active" aria-current="page" href="./control.php">Ovládání</a>
+                    <a class="nav-link active" aria-current="page" href="./controls.php">Ovládání</a>
                     <a class="nav-link" href="#">Historie</a>
                 </div>
             </div>
@@ -39,11 +39,8 @@
             <input type="checkbox" class="btn-check" id="btncheck4" autocomplete="off">
             <label class="btn btn-outline-primary" for="btncheck4">Okruh 4</label>
         </div> 
-    </div>
-    <div class="my-sub-btn-container">
-            <button type="button" class="btn btn-outline-secondary my-btn-center ps-3 pe-3">Zalej</button>
-    </div>   
-    
+    </div> 
+    <script src="./main.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
 
