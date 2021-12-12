@@ -2,7 +2,9 @@ import socket
 import json
 from time import sleep
 import logging
+from Backend.watering import handle_reqular_request
 from sensors import handle_sensors
+from watering import handle_reqular_request
 
 # configure logging to given file for better bug finding
 logging.basicConfig(filename="/var/log/python-log/error-log", filemode="w", level=logging.DEBUG,
@@ -29,7 +31,7 @@ class Listening():
             self.rcvData = c.recv(1024)
             # activate when message is received
             if self.rcvData is not None:
-                logging.info(f"Address {addr} connected.")
+                # logging.info(f"Address {addr} connected.")
                 print("connection recieved")
                 if self.handle_data():
                     # c.send('200')
@@ -52,8 +54,8 @@ class Listening():
         # decide what script should bye     
         if self.type == "sensors":
             return handle_sensors(self.results)
-        elif self.type == "web-ui":
-            return True
+        elif self.type == "reqular-request":
+            return handle_reqular_request(self.results)
         else:
             return False
     

@@ -10,6 +10,7 @@ logging.basicConfig(filename="/var/log/python-log/error-log", filemode="w", leve
 
 def database_connect(name, count):
     # connects to db and return given connection object
+    # count variable stands for how many tries shut function procced before turning of
     try:
         conn = mariadb.connect(
             user="root",
