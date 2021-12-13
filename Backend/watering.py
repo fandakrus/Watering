@@ -3,7 +3,6 @@ import mariadb
 import logging
 from sensors import database_connect
 
-is_watering_manualy = False
 is_watering_automaticaly = False
 watered_auto_today = False
 
@@ -17,7 +16,6 @@ def read_sensor_database(limit):
     water_list = []
     # makes connection to database with given method
     conn = database_connect("watering", 50)
-    
     curr = conn.cursor()
     try:
         curr.execute(f"SELECT id, soil_humidity, water_height FROM sensors ORDER BY id DESC LIMIT {limit}")
