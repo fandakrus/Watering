@@ -2,9 +2,8 @@ import socket
 import json
 from time import sleep
 import logging
-from Backend.watering import handle_reqular_request
 from sensors import handle_sensors
-from watering import handle_reqular_request
+from watering import Watering
 
 # configure logging to given file for better bug finding
 logging.basicConfig(filename="/var/log/python-log/error-log", filemode="w", level=logging.DEBUG,
@@ -22,6 +21,8 @@ class Listening():
         self.m_socket.bind(('', self.port))
         # let socket listen and que up max 5 connections   
         self.m_socket.listen(5)
+        #watering class used to handle data
+        self.watering = Watering()
 
     def listen(self):
         # keep listening for the incoming traffic and handle the connections
@@ -32,7 +33,6 @@ class Listening():
             # activate when message is received
             if self.rcvData is not None:
                 # logging.info(f"Address {addr} connected.")
-                print("connection recieved")
                 if self.handle_data():
                     # c.send('200')
                     pass
@@ -55,7 +55,7 @@ class Listening():
         if self.type == "sensors":
             return handle_sensors(self.results)
         elif self.type == "reqular-request":
-            return handle_reqular_request(self.results)
+            return self.watering.handle_reqular_request(self.results)
         else:
             return False
     
