@@ -2,6 +2,7 @@ import mariadb
 import logging
 from sensors import database_connect
 import datetime
+import json
 
 
 #configure logging
@@ -42,11 +43,14 @@ def read_controls_database():
         curr.execute(f"SELECT id, main_control, circle1, circle2, circle3, circle4 FROM controls ORDER BY id DESC LIMIT 1")
     except mariadb.Error as e:
         print(f"Could not get data from database: {e}")
-    return curr.fetchone()
+    data = curr.fetchone()
+    conn.close()
+    return data
 
 def process_cycles(cur_cycle):
     cycle_list = [0] * 4
-    cycle_list[cur_cycle] = 1
+    if cur_cycle is not None:
+        cycle_list[cur_cycle] = 1
     return_data = {
                 "circle1": cycle_list[0],
                 "circle2": cycle_list[1],
@@ -54,6 +58,14 @@ def process_cycles(cur_cycle):
                 "circle4": cycle_list[3],
             }
     return return_data
+
+def check_main_valve(data):
+    values = list(data.values())
+    if any(values):
+        data["main_valve"] = True
+    else:
+        data["main_valve"] = False
+    return json.dumps(data)
 
 
 class Watering():
@@ -104,20 +116,21 @@ class Watering():
         if self.current_circle is None:
             self.current_circle = 1
             self.current_circle_starting_time = datetime.datetime.now()
-        elif (datetime.datetime.now() - self.current_circle_starting_time).total_seconds >= self.circle_duration:
+        elif (datetime.datetime.now() - self.current_circle_starting_time).total_seconds() >= self.circle_duration:
             if self.current_circle == 4:
                 # ends the watering cycle
                 self.current_circle = None
                 self.current_circle_starting_time = None
                 self.is_watering_automaticaly = False
-            self.current_circle += 1
-            self.current_circle_starting_time = datetime.datetime.now()
+            else:
+                self.current_circle += 1
+                self.current_circle_starting_time = datetime.datetime.now()
         return process_cycles(self.current_circle)
 
     def check_auto(self):
-        now = datetime.datetime.now()
         if self.is_watering_automaticaly:
             return self.water_run()
+        now = datetime.datetime.now()
         if now.hour == 2 and not self.watered_auto_today:
             logging.info("Automatic watering was triggered")
             self.watered_auto_today = True
@@ -129,14 +142,14 @@ class Watering():
         # main funcion imported to script
         controls_value = self.check_controls()
         if(controls_value):
-            print("hey")
-            return controls_value
+            return check_main_valve(controls_value)
         auto_value = self.check_auto()
         if(auto_value):
-            return auto_value
+            return check_main_valve(auto_value)
         
 
 if __name__ == '__main__':
     watering = Watering()
     print(watering.handle_reqular_request("plesk"))
+    
 

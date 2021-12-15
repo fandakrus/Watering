@@ -13,6 +13,8 @@ logging.basicConfig(filename="/var/log/python-log/error-log", filemode="w", leve
 class Listening():
 
     def __init__(self) -> None:
+        #watering class used to handle data
+        self.watering = Watering()
         # port used for this communication is 12345
         self.port = 12345
         # make new socket used to listen to values from measurements
@@ -21,8 +23,7 @@ class Listening():
         self.m_socket.bind(('', self.port))
         # let socket listen and que up max 5 connections   
         self.m_socket.listen(5)
-        #watering class used to handle data
-        self.watering = Watering()
+
 
     def listen(self):
         # keep listening for the incoming traffic and handle the connections
@@ -32,13 +33,10 @@ class Listening():
             self.rcvData = c.recv(1024)
             # activate when message is received
             if self.rcvData is not None:
-                # logging.info(f"Address {addr} connected.")
-                if self.handle_data():
-                    # c.send('200')
-                    pass
-                else:
-                    # c.send('500')
-                    pass
+                # if esp is expecting response send it
+                response = self.handle_data()
+                if response is not None:
+                    c.sendall(response.encode('utf-8'))
                 self.rcvData = None
                 self.results = None
                 c.close()
@@ -50,11 +48,14 @@ class Listening():
         try:
             self.type = self.results["type"]
         except KeyError:
-            return False
-        # decide what script should bye     
-        if self.type == "sensors":
-            return handle_sensors(self.results)
-        elif self.type == "reqular-request":
+            return None
+        # decide what script should bye  
+        # recives 0 for sensors data 
+        # and 1 for regular request   
+        if self.type == 0:
+            handle_sensors(self.results)
+            return None
+        elif self.type == 1:
             return self.watering.handle_reqular_request(self.results)
         else:
             return False
