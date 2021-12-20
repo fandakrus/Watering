@@ -1,13 +1,8 @@
 import socket
 import json
-from time import sleep
-import logging
+from config import logging
 from sensors import handle_sensors
 from watering import Watering
-
-# configure logging to given file for better bug finding
-logging.basicConfig(filename="/var/log/python-log/error-log", filemode="w", level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)-8s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 
 class Listening():
@@ -33,6 +28,7 @@ class Listening():
             self.rcvData = c.recv(1024)
             # activate when message is received
             if self.rcvData is not None:
+                print(f"Connetion recived from {addr} and data is {self.rcvData}")
                 # if esp is expecting response send it
                 response = self.handle_data()
                 if response is not None:
@@ -46,7 +42,7 @@ class Listening():
         self.results = json.loads(self.rcvData.decode('utf-8'))
         # find what kind of data were ricieved
         try:
-            self.type = self.results["type"]
+            self.type = int(self.results["type"])
         except KeyError:
             return None
         # decide what script should bye  
@@ -58,7 +54,7 @@ class Listening():
         elif self.type == 1:
             return self.watering.handle_reqular_request(self.results)
         else:
-            return False
+            return None
     
 
 

@@ -1,20 +1,16 @@
 import mariadb
 import logging
-from sensors import database_connect
+from config import conn, logging
 import datetime
 import json
 
 
-#configure logging
-logging.basicConfig(filename="/var/log/python-log/error-log", filemode="w", level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-
-
 def read_sensor_database(limit):
     # get limit rows from database with sensor data 
+    # function returns limit of values for soil_hum and water_height from db and one value for last float_sensor
     soil_list = []
     water_list = []
-    # makes connection to database with given method
-    conn = database_connect("watering", 50)
+    # creates new cursor object to interact with db
     curr = conn.cursor()
     try:
         curr.execute(f"SELECT id, soil_humidity, water_height FROM sensors ORDER BY id DESC LIMIT {limit}")
@@ -25,32 +21,36 @@ def read_sensor_database(limit):
         soil_list.append(soil_humidity)
         water_list.append(water_height)
     # cleare the cursor object to select new data
-    useless_data = curr.fatchall()
+    curr.fetchall()
+    conn.commit()
     try:
         curr.execute("SELECT id, float_sensor FROM sensors ORDER BY id DESC LIMIT 1")
     except mariadb.Error as e:
         logging.error(f"Could not get data from database: {e}")
-    id, float_sensor = curr.fatchone()
-    conn.close()
+    id, float_sensor = curr.fetchone()
+    curr.fetchall()
+    conn.commit()
     return(soil_list, water_list, float_sensor)
 
 
 def read_controls_database():
     # return last line from db with conrols records
-    conn = database_connect("watering", 50)
     curr = conn.cursor()
     try:
         curr.execute(f"SELECT id, main_control, circle1, circle2, circle3, circle4 FROM controls ORDER BY id DESC LIMIT 1")
     except mariadb.Error as e:
         print(f"Could not get data from database: {e}")
     data = curr.fetchone()
-    conn.close()
+    print(f"{data = }")
+    curr.fetchall()
+    print(curr.fetchone())
+    conn.commit()
     return data
 
 def process_cycles(cur_cycle):
     cycle_list = [0] * 4
     if cur_cycle is not None:
-        cycle_list[cur_cycle] = 1
+        cycle_list[cur_cycle - 1] = 1
     return_data = {
                 "circle1": cycle_list[0],
                 "circle2": cycle_list[1],
@@ -60,6 +60,7 @@ def process_cycles(cur_cycle):
     return return_data
 
 def check_main_valve(data):
+    # check if any value of circles is on to tell esp how to control the main valve
     values = list(data.values())
     if any(values):
         data["main_valve"] = True
@@ -98,7 +99,7 @@ class Watering():
 
     def start_water(self):
         """
-        In the right time finds out if it should start waterin by given conditions
+        In the right time finds out if it should start watering by given conditions
         """
         # reads last 20 values measured by sensors
         soil_list, water_list, float_sensor = read_sensor_database(20)
@@ -131,17 +132,19 @@ class Watering():
         if self.is_watering_automaticaly:
             return self.water_run()
         now = datetime.datetime.now()
-        if now.hour == 2 and not self.watered_auto_today:
+        if now.hour == 0 and not self.watered_auto_today:
             logging.info("Automatic watering was triggered")
             self.watered_auto_today = True
             return self.start_water()
-        elif now.hour == 0 and self.watered_auto_today:
+        elif now.hour == 22 and self.watered_auto_today:
             self.watered_auto_today = False
 
     def handle_reqular_request(self, data):
         # main funcion imported to script
         controls_value = self.check_controls()
+        # decides if water should be started based on manual controls
         if(controls_value):
+            # print(f"{controls_value=}")
             return check_main_valve(controls_value)
         auto_value = self.check_auto()
         if(auto_value):

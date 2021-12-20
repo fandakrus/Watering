@@ -12,8 +12,8 @@ clientSocket.connect(("192.168.0.193", port))
 # Send data to server
 
 data = {
-    "type": "sensors",
-    "soil_humidity": 20,
+    "type": "0",
+    "soil_humidity": 10,
     "water_height": 58.4,
     "float_sensor": True
 }
