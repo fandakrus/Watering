@@ -11,6 +11,29 @@
 </head>
 
 <body>
+    <?php
+    function OpenDbCon() {
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "watering";
+        // Create connection 
+        $conn = new mysqli($servername, $username, $password, $dbname);
+
+        // Check connection
+        if ($conn->connect_error) {
+            die("Connection failed: ". $conn->connect_error);
+        }
+
+        return $conn;
+    }
+
+    //open object with database
+    $conn = OpenDbCon();
+
+    $prevaules = $conn->query("SELECT id, circle1, circle2, circle3, circle4 FROM controls ORDER BY id DESC LIMIT 1");
+    $dbvalue = $prevaules->fetch_row();
+    ?>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,16 +50,16 @@
     </nav>
     <div class="position-relative my-btn-container">
         <div class="btn-group position-absolut top-0 start-50 translate-middle-x" role="group" aria-label="Basic checkbox toggle button group">
-            <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
+            <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off" <?php echo ($dbvalue[1]==1 ? 'checked' : '');?>>
             <label class="btn btn-outline-primary" for="btncheck1">Okruh 1</label>
             
-            <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
+            <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off" <?php echo ($dbvalue[2]==1 ? 'checked' : '');?>>
             <label class="btn btn-outline-primary" for="btncheck2">Okruh 2</label>
             
-            <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off">
+            <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off" <?php echo ($dbvalue[3]==1 ? 'checked' : '');?>>
             <label class="btn btn-outline-primary" for="btncheck3">Okruh 3</label>
             
-            <input type="checkbox" class="btn-check" id="btncheck4" autocomplete="off">
+            <input type="checkbox" class="btn-check" id="btncheck4" autocomplete="off" <?php echo ($dbvalue[4]==1 ? 'checked' : '');?>>
             <label class="btn btn-outline-primary" for="btncheck4">Okruh 4</label>
         </div> 
     </div> 

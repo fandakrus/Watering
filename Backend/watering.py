@@ -5,11 +5,21 @@ import datetime
 import json
 
 
+def ping_db(conn):
+    try:
+        conn.ping()
+    except mariadb.DatabaseError as e:
+        logging.error(f"Database connetion error occured: {e}, trying to reconenct ...")
+        conn.reconnect()
+
+
+
 def read_sensor_database(limit):
     # get limit rows from database with sensor data 
     # function returns limit of values for soil_hum and water_height from db and one value for last float_sensor
     soil_list = []
     water_list = []
+    ping_db(conn)
     # creates new cursor object to interact with db
     curr = conn.cursor()
     try:
@@ -35,19 +45,21 @@ def read_sensor_database(limit):
 
 def read_controls_database():
     # return last line from db with conrols records
+    ping_db(conn)
     curr = conn.cursor()
     try:
         curr.execute(f"SELECT id, main_control, circle1, circle2, circle3, circle4 FROM controls ORDER BY id DESC LIMIT 1")
     except mariadb.Error as e:
         print(f"Could not get data from database: {e}")
+    # gets tuple of given variables to data
     data = curr.fetchone()
-    print(f"{data = }")
+    # cleares connetion for new query
     curr.fetchall()
-    print(curr.fetchone())
     conn.commit()
     return data
 
 def process_cycles(cur_cycle):
+    # get number of current cycle to return dict with desired format
     cycle_list = [0] * 4
     if cur_cycle is not None:
         cycle_list[cur_cycle - 1] = 1

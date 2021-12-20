@@ -14,7 +14,7 @@ def do_connect():
     if not sta_if.isconnected():
         print('connecting to network...')
         sta_if.active(True)
-        sta_if.connect('ssis', 'password')
+        sta_if.connect('ssis', 'passwd')
         while not sta_if.isconnected():
             pass
     print('network config:', sta_if.ifconfig())
@@ -26,10 +26,11 @@ def send(data, require_response=False):
       server.connect(('192.168.0.193', 12345))
       # start socket object and connect to server
       server.sendall(data.encode('utf-8'))
+      # if reqular request is sended respons is waited for
       if require_response:
-        data = server.recv(1024)
-        server.close()
-        return data
+          data = server.recv(1024)
+          server.close()
+          return data
       server.close()
       
     except OSError as e:
@@ -51,3 +52,4 @@ def main():
    
    
 main()
+
