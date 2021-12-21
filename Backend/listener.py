@@ -29,6 +29,7 @@ class Listening():
             # activate when message is received
             if self.rcvData is not None:
                 print(f"Connetion recived from {addr} and data is {self.rcvData}")
+                logging.info(f"Connetion recived from {addr} and data is {self.rcvData}")
                 # if esp is expecting response send it
                 response = self.handle_data()
                 if response is not None:

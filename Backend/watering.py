@@ -50,7 +50,7 @@ def read_controls_database():
     try:
         curr.execute(f"SELECT id, main_control, circle1, circle2, circle3, circle4 FROM controls ORDER BY id DESC LIMIT 1")
     except mariadb.Error as e:
-        print(f"Could not get data from database: {e}")
+        logging.error(f"Could not get data from database: {e}")
     # gets tuple of given variables to data
     data = curr.fetchone()
     # cleares connetion for new query
@@ -75,9 +75,9 @@ def check_main_valve(data):
     # check if any value of circles is on to tell esp how to control the main valve
     values = list(data.values())
     if any(values):
-        data["main_valve"] = True
+        data["main_valve"] = 1
     else:
-        data["main_valve"] = False
+        data["main_valve"] = 0
     return json.dumps(data)
 
 
