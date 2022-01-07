@@ -13,10 +13,10 @@
 <body>
     <?php
     function OpenDbCon() {
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "watering";
+        $servername = getenv('DB_SERVER');
+        $username = getenv('DB_USER');
+        $password = getenv('DB_PASSWD');
+        $dbname = getenv('DB_NAME');
         // Create connection 
         $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -31,7 +31,7 @@
     //open object with database
     $conn = OpenDbCon();
 
-    $prevaules = $conn->query("SELECT id, circle1, circle2, circle3, circle4 FROM controls ORDER BY id DESC LIMIT 1");
+    $prevaules = $conn->query("SELECT id, circle1, circle2, circle3, circle4, main_control, water_source FROM controls ORDER BY id DESC LIMIT 1");
     $dbvalue = $prevaules->fetch_row();
     ?>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -61,8 +61,20 @@
             
             <input type="checkbox" class="btn-check" id="btncheck4" autocomplete="off" <?php echo ($dbvalue[4]==1 ? 'checked' : '');?>>
             <label class="btn btn-outline-primary" for="btncheck4">Okruh 4</label>
-        </div> 
+        </div>
     </div> 
+    <div id="my-outer">
+        <div id="my-inner">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="MainSwitchCheck" <?php echo ($dbvalue[5]==1 ? 'checked' : '');?>>
+                <label class="form-check-label" for="MainSwitchCheck">Hlavní vypínač</label>
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="SourceWaterCheck" <?php echo ($dbvalue[6]==1 ? 'checked' : '');?>>
+                <label class="form-check-label" for="SourceWaterCheck">Napajení z vodovodu</label>
+            </div>
+        </div>
+    </div>
     <script src="./main.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>

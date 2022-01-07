@@ -1,9 +1,9 @@
 <?php
     function OpenDbCon() {
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "watering";
+        $servername = getenv('DB_SERVER');
+        $username = getenv('DB_USER');
+        $password = getenv('DB_PASSWD');
+        $dbname = getenv('DB_NAME');
         // Create connection 
         $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -24,15 +24,12 @@
         $circle2=$_GET['circle2'];
         $circle3=$_GET['circle3'];
         $circle4=$_GET['circle4'];
+        $main_control=$_GET['main-control'];
+        $water_source=$_GET['water-source'];
     }
-
-    if($circle1 == "true" or $circle2 == "true" or $circle3 == "true" or $circle4 == "true") {
-        $main_control = "true";
-    } else {
-        $main_control = "false";
-    }
-
-    $sql = "INSERT INTO controls (main_control, circle1, circle2, circle3, circle4) VALUES (". $main_control .", ". $circle1 .", ". $circle2 .", ". $circle3 .", ". $circle4 .")";
+    
+    
+    $sql = "INSERT INTO controls (main_control, water_source, circle1, circle2, circle3, circle4) VALUES (". $main_control .", ". $water_source .", ". $circle1 .", ". $circle2 .", ". $circle3 .", ". $circle4 .")";
     
     // instert values into database
     if ($conn->query($sql) === TRUE) {

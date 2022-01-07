@@ -13,10 +13,10 @@
 <body>
     <?php
     function OpenDbCon() {
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "watering";
+        $servername = getenv('DB_SERVER');
+        $username = getenv('DB_USER');
+        $password = getenv('DB_PASSWD');
+        $dbname = getenv('DB_NAME');
         // Create connection 
         $conn = new mysqli($servername, $username, $password, $dbname);
 

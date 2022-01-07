@@ -20,7 +20,7 @@
     color: red;
   }
 
-  .my-btn-container {
+.my-btn-container {
     padding-top: 5%;
   }
 
@@ -36,4 +36,15 @@
     left: 50%;
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
+}
+#my-inner {
+  font-size: 2rem;
+}
+
+#my-outer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 2%;
+  padding-left: 2%;
 }
