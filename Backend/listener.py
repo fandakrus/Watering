@@ -46,7 +46,7 @@ class Listening():
             self.type = int(self.results["type"])
         except KeyError:
             return None
-        # decide what script should bye  
+        # decide what script should run with given data  
         # recives 0 for sensors data 
         # and 1 for regular request   
         if self.type == 0:
