@@ -1,9 +1,10 @@
 import mariadb
 import logging
-from config import conn, logging
 import datetime
 import json
 
+from config import conn, logging
+from history import CiclesHistory
 
 def ping_db(conn):
     try:
@@ -11,7 +12,6 @@ def ping_db(conn):
     except mariadb.DatabaseError as e:
         logging.error(f"Database connetion error occured: {e}, trying to reconenct ...")
         conn.reconnect()
-
 
 
 def read_sensor_database(limit):
@@ -58,6 +58,7 @@ def read_controls_database():
     conn.commit()
     return data
 
+
 def process_cycles(cur_cycle):
     # get number of current cycle to return dict with desired format
     cycle_list = [0] * 4
@@ -103,6 +104,8 @@ class Watering():
             "circle3": 0,
             "circle4": 0,
         }
+        # creates class to operete history db
+        self.history = CiclesHistory()
 
 
     def check_controls(self):
@@ -181,14 +184,18 @@ class Watering():
         controls_value = self.check_controls()
         # if the main switch is of don't water at all
         if not self.main_control:
+            self.history.decide_history_database(self.empty_water_dict)
             return check_main_valve(self.empty_water_dict)
         # decides if water should be started based on manual controls
         if(controls_value):
             # print(f"{controls_value=}")
+            self.history.decide_history_database(controls_value)
             return check_main_valve(controls_value)
         auto_value = self.check_auto()
         if(auto_value):
+            self.history.decide_history_database(auto_value)
             return check_main_valve(auto_value)
+        self.history.decide_history_database(self.empty_water_dict)
         return check_main_valve(self.empty_water_dict)
         
 
