@@ -43,7 +43,7 @@
                 <div class="navbar-nav">
                     <a class="nav-link" href="./index.php">Domov</a>
                     <a class="nav-link active" aria-current="page" href="./controls.php">Ovládání</a>
-                    <a class="nav-link" href="#">Historie</a>
+                    <a class="nav-link" href="./history.php">Historie</a>
                 </div>
             </div>
         </div>

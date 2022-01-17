@@ -46,48 +46,25 @@
             </div>
         </div>
     </nav>
-    <div class='d-flex flex-row bd-highlight'>
-        <div class="bd-highlight mupperdiv">
-            <h2>Poslední zalévání</h2>
-            <p class="fs-1 mb-0">12. 6. 2021</p>
-            <p class="fs-1">5:00</p>
-        </div>
-        <div class="bd-highlight mupperdiv">
-            <h2>Stav studně</h2>
-            <?php 
-            $depth = $conn->query("SELECT id, water_height FROM sensors ORDER BY id DESC LIMIT 1");
-            while($row = $depth->fetch_assoc()) {
-                echo "<p class='mdepth fs-1 mb-0'>". $row["water_height"] ." m</p>";
-            }
-            ?>
-        </div>
-    </div>
+    
     <table class="table table-striped">
         <thead>
-            <td>Pořadí</td>
-            <td>Hladina</td>
-            <td>Vlhost</td>
-            <td>Plovák</td>
-            <td>Čas</td>
+            <td>Okruh</td>
+            <td>Začátek</td>
+            <td>Konec</td>
         </thead>
         <tbody>
         <?php
             
-            $result = $conn->query("SELECT id, water_height, soil_humidity, float_sensor, meas_date FROM sensors ORDER BY id DESC LIMIT 10");
+            $result = $conn->query("SELECT id, start_time, end_time, circle FROM watering_history ORDER BY id DESC LIMIT 20");
             $row_counter = 1;
             while($row = $result->fetch_assoc()) {
-                if ($row["float_sensor"] == true) {
-                    $dot = '<span class="my-active">●</span>';
-                } else {
-                    $dot = '<span class="my-inactive">●</span>';
-                }
                 echo "<tr>
                     <td>". $row_counter ."</td>
-                    <td>". $row["water_height"] ."</td>
-                    <td>". $row["soil_humidity"] ."</td>
-                    <td>". $dot ."</td>
-                    <td>". $row["meas_date"]. "</td>
-                </tr>";
+                    <td>". $row["circle"] ."</td>
+                    <td>". $row["start_time"] ."</td>
+                    <td>". $row["end_time"] ."</td>
+                    </tr>";
                 $row_counter += 1;
             }
             $conn->close;

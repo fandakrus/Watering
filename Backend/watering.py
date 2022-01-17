@@ -48,7 +48,7 @@ def read_controls_database():
     ping_db(conn)
     curr = conn.cursor()
     try:
-        curr.execute(f"SELECT id, water_source, main_control, circle1, circle2, circle3, circle4 FROM controls ORDER BY id DESC LIMIT 1")
+        curr.execute(f"SELECT id, main_control, water_source, circle1, circle2, circle3, circle4 FROM controls ORDER BY id DESC LIMIT 1")
     except mariadb.Error as e:
         logging.error(f"Could not get data from database: {e}")
     # gets tuple of given variables to data
@@ -188,7 +188,6 @@ class Watering():
             return check_main_valve(self.empty_water_dict)
         # decides if water should be started based on manual controls
         if(controls_value):
-            # print(f"{controls_value=}")
             self.history.decide_history_database(controls_value)
             return check_main_valve(controls_value)
         auto_value = self.check_auto()
