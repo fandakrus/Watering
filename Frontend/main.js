@@ -31,15 +31,42 @@ function checkChecker(elements) {
     return data;
 }
 
+function enableControls(label_array) {
+    label_array.forEach(element => {
+        element.classList.remove("disabled");
+    })
+}
+
+function disableControls(btn_array, label_array) {
+    btn_array.forEach(element => {
+        element.checked = false;
+    })
+    label_array.forEach(element => {
+        element.classList.add("disabled");
+    })
+}
+
 // waits for change in the selection of checkboxes
 document.addEventListener('DOMContentLoaded', function () {
     // get all elements with id btn-check from circle values -> return Nodelist and cann't be appended
     var btn_list = document.querySelectorAll('.btn-check');
+    var btn_array = Array.from(btn_list);
+    var label_list = document.querySelectorAll('#btnchecklabel');
+    var label_array = Array.from(label_list);
     // convert Nodelist to array
     var elements = Array.from(btn_list);
     // add values for main conrol and water source
-    elements.push(document.getElementById('MainSwitchCheck'));
+    var main_control = document.getElementById('MainSwitchCheck');
+    elements.push(main_control);
     elements.push(document.getElementById('SourceWaterCheck'));
+
+    main_control.addEventListener('change', function() {
+        if (this.checked) {
+            enableControls(label_array);
+        } else {
+            disableControls(btn_array, label_array);
+        }
+    })
 
     elements.forEach(element => {
         element.addEventListener('click', (e)=>{
