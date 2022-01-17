@@ -49,8 +49,14 @@
     <div class='d-flex flex-row bd-highlight'>
         <div class="bd-highlight mupperdiv">
             <h2>Poslední zalévání</h2>
-            <p class="fs-1 mb-0">12. 6. 2021</p>
-            <p class="fs-1">5:00</p>
+            <?php 
+            $last_time = $conn->query("SELECT id, end_time FROM watering_history ORDER BY id DESC LIMIT 1");
+            while($row = $last_time->fetch_assoc()) {
+                $time_last_time = strtotime($row["end_time"]);
+                echo '<p class="fs-1 mb-0">' . date("d. m. Y", $time_last_time) . '</p>';
+                echo '<p class="fs-1">' . date("H:i", $time_last_time) . '</p>';
+            }
+            ?>
         </div>
         <div class="bd-highlight mupperdiv">
             <h2>Stav studně</h2>

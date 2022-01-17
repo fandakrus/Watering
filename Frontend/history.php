@@ -39,9 +39,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-link active" aria-current="page" href="./index.php">Domov</a>
+                    <a class="nav-link" aria-current="page" href="./index.php">Domov</a>
                     <a class="nav-link" href="./controls.php">Ovládání</a>
-                    <a class="nav-link" href="./history.php">Historie</a>
+                    <a class="nav-link active" href="./history.php">Historie</a>
                 </div>
             </div>
         </div>
@@ -49,6 +49,7 @@
     
     <table class="table table-striped">
         <thead>
+            <td>Pořadí</td>
             <td>Okruh</td>
             <td>Začátek</td>
             <td>Konec</td>
@@ -62,8 +63,8 @@
                 echo "<tr>
                     <td>". $row_counter ."</td>
                     <td>". $row["circle"] ."</td>
-                    <td>". $row["start_time"] ."</td>
-                    <td>". $row["end_time"] ."</td>
+                    <td>". date("d. m. Y - H:i:s", strtotime($row["start_time"])) ."</td>
+                    <td>". date("d. m. Y - H:i:s", strtotime($row["end_time"])) ."</td>
                     </tr>";
                 $row_counter += 1;
             }
