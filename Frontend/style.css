@@ -37,6 +37,11 @@
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
+
+.my-graph-image {
+  max-height: 600px;
+}
+
 #my-inner {
   font-size: 2rem;
 }

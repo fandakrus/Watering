@@ -54,9 +54,9 @@ def select_graph_data(conn):
 
 def count_diff(length):
     # finds out how big spaces should be on x axe
-    if length < 6:
+    if length < 8:
         return 1
-    return int(length/6)
+    return int(length/8)
 
 
 def prepare_graph(data):
@@ -71,7 +71,8 @@ def prepare_graph(data):
     ax.set_xticks(np.arange(oldest, newest, timedelta(days=diff)))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%d. %b"))
     fig.autofmt_xdate(rotation=90)
-    plt.savefig('/var/www/html/static/foo.png')
+    fig.set_size_inches(20, 5)
+    plt.savefig('/var/www/html/static/foo.png', dpi=150)
 
 
 

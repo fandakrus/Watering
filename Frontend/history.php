@@ -48,7 +48,10 @@
         </div>
     </nav>
     <section>
-        <hr>
+        <div>
+            <img src="static/foo.png" class="img-fluid" alt="Průběh výšky hladiny">
+        </div>
+        <hr class="mt-0">
         <div>
             <h2 class="text-center mb-0">Historie měření</h2>
         </div>
