@@ -1,8 +1,10 @@
 import mariadb
 import logging
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import numpy as np
 from datetime import date, timedelta
+import os.path
 
 
 from config import database_connect
@@ -61,18 +63,15 @@ def prepare_graph(data):
     """
     Gets two list of data and makes graph based on it
     """
-    """plt.xticks(rotation=90)
-    plt.plot(data[1], data[0])
-    plt.gca().xaxis.set_major_locator(mdates)
-    plt.savefig('foo.png')"""
     oldest = date.fromisoformat(str(min(data[1])))     # TODO repair this 
     newest = date.today()
     diff = count_diff(len(data[0]))
     fig, ax = plt.subplots(1, 1)
     ax.plot(data[1], data[0])
     ax.set_xticks(np.arange(oldest, newest, timedelta(days=diff)))
-    fig.autofmt_xdate(rotation=45)
-    plt.savefig('foo.png')
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%d. %b"))
+    fig.autofmt_xdate(rotation=90)
+    plt.savefig('/var/www/html/static/foo.png')
 
 
 
