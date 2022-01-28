@@ -1,7 +1,11 @@
 import mariadb
 import logging
-from config import database_connect
+import matplotlib.pyplot as plt
+import numpy as np
+from datetime import date, timedelta
 
+
+from config import database_connect
 
 logging.basicConfig(filename="/var/log/python-log/sensor-history-log", filemode="w", level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
@@ -34,6 +38,44 @@ def insert_data(data, conn):
     conn.commit()
 
 
+def select_graph_data(conn):
+    """
+    Gets dates and water_height values from last year
+    """
+    curr = conn.cursor()
+    try:
+        curr.execute("SELECT water_height, meas_date FROM sensors_history ORDER BY meas_date DESC LIMIT 365")
+    except mariadb.Error as e:
+        logging.error(f"Could not read from sensor_history database because of error: {e}")
+    data = list(map(list, zip(*curr.fetchall())))
+    return data
+
+def count_diff(length):
+    # finds out how big spaces should be on x axe
+    if length < 6:
+        return 1
+    return int(length/6)
+
+
+def prepare_graph(data):
+    """
+    Gets two list of data and makes graph based on it
+    """
+    """plt.xticks(rotation=90)
+    plt.plot(data[1], data[0])
+    plt.gca().xaxis.set_major_locator(mdates)
+    plt.savefig('foo.png')"""
+    oldest = date.fromisoformat(str(min(data[1])))     # TODO repair this 
+    newest = date.today()
+    diff = count_diff(len(data[0]))
+    fig, ax = plt.subplots(1, 1)
+    ax.plot(data[1], data[0])
+    ax.set_xticks(np.arange(oldest, newest, timedelta(days=diff)))
+    fig.autofmt_xdate(rotation=45)
+    plt.savefig('foo.png')
+
+
+
 def main():
     connh = database_connect("watering", 0)
     logging.info("Sensors history script started trying to make new record")
@@ -42,6 +84,8 @@ def main():
         insert_data(data, connh)
     else:
         logging.error("No data from sensor database recieved.")
+    data = select_graph_data(connh)
+    prepare_graph(data)
     connh.close()
 
 
