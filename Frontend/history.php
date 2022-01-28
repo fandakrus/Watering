@@ -12,7 +12,8 @@
 
 <body>
     <?php
-    function OpenDbCon() {
+    function OpenDbCon()
+    {
         $servername = getenv('DB_SERVER');
         $username = getenv('DB_USER');
         $password = getenv('DB_PASSWD');
@@ -22,7 +23,7 @@
 
         // Check connection
         if ($conn->connect_error) {
-            die("Connection failed: ". $conn->connect_error);
+            die("Connection failed: " . $conn->connect_error);
         }
 
         return $conn;
@@ -46,33 +47,69 @@
             </div>
         </div>
     </nav>
-    
-    <table class="table table-striped">
-        <thead>
-            <td>Pořadí</td>
-            <td>Okruh</td>
-            <td>Začátek</td>
-            <td>Konec</td>
-        </thead>
-        <tbody>
-        <?php
-            
-            $result = $conn->query("SELECT id, start_time, end_time, circle FROM watering_history ORDER BY id DESC LIMIT 20");
-            $row_counter = 1;
-            while($row = $result->fetch_assoc()) {
-                echo "<tr>
-                    <td>". $row_counter ."</td>
-                    <td>". $row["circle"] ."</td>
-                    <td>". date("d. m. Y - H:i:s", strtotime($row["start_time"])) ."</td>
-                    <td>". date("d. m. Y - H:i:s", strtotime($row["end_time"])) ."</td>
-                    </tr>";
-                $row_counter += 1;
-            }
-            $conn->close;
+    <section>
+        <hr>
+        <div>
+            <h2 class="text-center mb-0">Historie měření</h2>
+        </div>
+        <hr class="mb-0">
+        <table class="table table-striped pl-2">
+            <thead>
+                <td>Pořadí</td>
+                <td>Datum</td>
+                <td>Hladina vody</td>
+                <td>Vlhkost půdy</td>
+            </thead>
+            <tbody>
+                <?php
 
-        ?>
-        </tbody>
-    </table>
+                $result = $conn->query("SELECT id, water_height, soil_humidity, meas_date FROM sensors_history ORDER BY id DESC LIMIT 20");
+                $row_counter = 1;
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>
+                <td>" . $row_counter . "</td>
+                <td>" . date("j. n. Y", strtotime($row["meas_date"])) . "</td>
+                <td>" . $row["water_height"] . "</td>
+                <td>" . $row["soil_humidity"] . "</td>
+                </tr>";
+                    $row_counter += 1;
+                }
+                ?>
+            </tbody>
+        </table>
+    </section>
+    <section>
+        <div>
+            <h2 class="text-center mb-0">Historie zalévání</h2>
+        </div>
+        <hr class="mb-0">
+        <table class="table table-striped">
+            <thead>
+                <td>Pořadí</td>
+                <td>Okruh</td>
+                <td>Začátek</td>
+                <td>Konec</td>
+            </thead>
+            <tbody>
+                <?php
+
+                $result = $conn->query("SELECT id, start_time, end_time, circle FROM watering_history ORDER BY id DESC LIMIT 20");
+                $row_counter = 1;
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>
+                <td>" . $row_counter . "</td>
+                <td>" . $row["circle"] . "</td>
+                <td>" . date("j. n. Y - H:i:s", strtotime($row["start_time"])) . "</td>
+                <td>" . date("j. n. Y - H:i:s", strtotime($row["end_time"])) . "</td>
+                </tr>";
+                    $row_counter += 1;
+                }
+                $conn->close;
+
+                ?>
+            </tbody>
+        </table>
+    </section>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
 
