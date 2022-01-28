@@ -10,7 +10,7 @@ def write_to_database(data):
                      (data["soil_humidity"], data["water_height"], data["float_sensor"]))
         logging.info("Sensor data succesfully written in db")
     except mariadb.Error as e:
-        logging.error(f"Could not write in data because of error: {e}")
+        logging.error(f"Could not write into sensors database because of error: {e}")
     # makes the changes in given database
     conn.commit()
 
@@ -22,6 +22,7 @@ def value_check(value):
     if value > bottom_border and value < upper_border:
         return True
     else:
+        logging.error("Values out of range")
         return False
 
 

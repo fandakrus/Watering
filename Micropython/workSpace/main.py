@@ -6,6 +6,7 @@ try:
 except:
   import socket
 import json
+# not defaul lib needs to be upload on ESP
 from hcsr04 import HCSR04
 
 well_hight = 200
