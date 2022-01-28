@@ -43,16 +43,16 @@ class Listening():
         self.results = json.loads(self.rcvData.decode('utf-8'))
         # find what kind of data were ricieved
         try:
-            self.type = int(self.results["type"])
+            type = int(self.results["type"])
         except KeyError:
             return None
         # decide what script should run with given data  
         # recives 0 for sensors data 
         # and 1 for regular request   
-        if self.type == 0:
+        if type == 0:
             handle_sensors(self.results)
             return None
-        elif self.type == 1:
+        elif type == 1:
             return self.watering.handle_reqular_request(self.results)
         else:
             return None
