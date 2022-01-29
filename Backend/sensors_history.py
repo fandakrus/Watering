@@ -87,7 +87,7 @@ def prepare_graph(data):
     """
     Gets two list of data and makes graph based on it
     """
-    oldest = date.fromisoformat(str(min(data[1])))     # TODO repair this 
+    oldest = date.fromisoformat(str(min(data[1]))) 
     newest = date.today()
     diff = count_diff(len(data[0]))
     fig, ax = plt.subplots(1, 1)
