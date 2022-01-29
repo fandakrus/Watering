@@ -5,11 +5,35 @@ import matplotlib.dates as mdates
 import numpy as np
 from datetime import date, timedelta
 import os.path
+import sys
 
 
-from config import database_connect
+logging.basicConfig(filename="/var/log/python-log/sensor-history-log", filemode="w", level=logging.INFO, format='%(asctime)s %(levelname)-8s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
-logging.basicConfig(filename="/var/log/python-log/sensor-history-log", filemode="w", level=logging.DEBUG, format='%(asctime)s %(levelname)-8s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+
+def database_connect(name, count):
+    # connects to db and return given connection object
+    # count variable stands for how many tries should function procceed before turning of
+    try:
+        conn = mariadb.connect(
+            user="root",
+            password="",
+            host="localhost",
+            port=3306,
+            database=name
+        )
+        logging.info(f"Successfully connected to database {name}")
+    # if connection fails
+    except mariadb.Error as e:
+        if count <= 100:
+            logging.critical("Could not connect to DB")
+            sys.exit(1)
+        logging.error(f"Error connecting to MariaDB Platform: {e}")
+        count += 1
+        # dangerous!! can cycle forever if connection is not made exit program
+        return database_connect(name, count)
+    # return connection to given database
+    return conn
 
 
 def select_data(conn):
@@ -73,6 +97,7 @@ def prepare_graph(data):
     fig.autofmt_xdate(rotation=90)
     fig.set_size_inches(20, 5)
     plt.savefig('/var/www/html/static/foo.png', dpi=150)
+    logging.info("File saved")
 
 
 
