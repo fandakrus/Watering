@@ -1,0 +1,9 @@
+Board:      https://www.laskakit.cz/espressif-esp32-s2-saola-1r-2-4ghz-wifi-rev--1-2--cp2102/?gclid=Cj0KCQiA09eQBhCxARIsAAYRiymXumCRruT4i_myZy6SmimXV5aD2Sz5wp9_tWJt6ZMqD6QN6EFNA8EaAnJUEALw_wcB
+Anthena setup tutorial:    https://randomnerdtutorials.com/esp32-cam-connect-external-antenna/
+Bread board:   https://www.laskakit.cz/laskkit-half-proto-breadboard/ 
+Wires: ?
+Antenna: https://www.hadex.cz/o856-antena-wifi-24ghz--pigtail-ufl-sma/?gclid=Cj0KCQiA09eQBhCxARIsAAYRiyk4q6tzb2u5Evp0CI2L8QDHwmwu_vXsUxQJNL8hAxRbGtKLh6P7sLsaAh1qEALw_wcB
+(Water Proof): https://www.delock.com/produkte/1468_Antenna/88394/merkmale.html?setLanguage=cz
+Cabel: https://www.alza.cz/oem-antenni-kabel-rg58-rp-smam-rp-smaf-2m-d5667567.htm?kampan=adw4_prislusenstvi-pro-mt_pla_all_obecna-css_kabely-redukce-a-radice_c_21501___AN051d33_456135983220_~106264923253~&gclid=Cj0KCQiA09eQBhCxARIsAAYRiyknQUgXiykkY-j4DwOJ2dAcadC8zXF7CRYsbfQHqjLn66bm5HanXggaAvVeEALw_wcB
+
+SMA vs RP-SMA solve this problem before ordering
