@@ -31,7 +31,7 @@ class CiclesHistory():
         if db_value == bool(act_value):
             return False
         if db_value == False and bool(act_value) == True:
-            print("data changed value remebered")
+            # print("data changed value remebered")
             self.circle_time_list[index] = datetime.now()
             self.circle_list[index] = True
             return False
@@ -43,12 +43,12 @@ class CiclesHistory():
         with use of decide_diff function prepare records to be inserted into history db based on values witch are returned prepared to send
         """
         data_list = [data["circle1"], data["circle2"], data["circle3"], data["circle4"]]
-        print(f"{data_list = }")
-        print(f"{self.circle_list = }")
-        print(f"{self.circle_time_list = }")
+        # print(f"{data_list = }")
+        # print(f"{self.circle_list = }")
+        # print(f"{self.circle_time_list = }")
         for index, (db_value, act_value) in enumerate(zip(self.circle_list, data_list)):
             if self.decide_differance(db_value, act_value, index):
-                print("Writing")
+                # print("Writing")
                 self.write_history_database(self.circle_time_list[index], datetime.now(), index + 1)
                 self.circle_time_list[index] = None
                 self.circle_list[index] = False

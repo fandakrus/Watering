@@ -1,23 +1,33 @@
 import socket
 import json
+from time import sleep
 
 port = 12345
 
-clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-clientSocket.connect(("192.168.0.193", port))
-
- 
 
 # Send data to server
+def send_sensors():
+    clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    clientSocket.connect(("192.168.0.193", port))
+    data = {
 
-data = {
-    "type": "0",
-    "soil_humidity": 10,
-    "water_height": 58.4,
-    "float_sensor": True
-}
+    }
 
-json_data = json.dumps(data)
+    json_data = json.dumps(data)
+    clientSocket.sendall(json_data.encode('utf-8'))
+    clientSocket.close()
 
-clientSocket.sendall(json_data.encode('utf-8'))
+def send_request():
+    clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    clientSocket.connect(("192.168.0.193", port))
+    jdata = json.dumps({"type": 1}) 
+    clientSocket.sendall(jdata.encode('utf-8'))
+    # response = clientSocket.recv(1024).decode('utf-8')
+    # print(response)
+    clientSocket.close()
+
+
+while True:
+    send_sensors()
+    sleep(3)
+

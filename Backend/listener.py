@@ -45,6 +45,7 @@ class Listening():
         try:
             type = int(self.results["type"])
         except KeyError:
+            logging.error("No connection type recieved")
             return None
         # decide what script should run with given data  
         # recives 0 for sensors data 
@@ -55,6 +56,7 @@ class Listening():
         elif type == 1:
             return self.watering.handle_reqular_request(self.results)
         else:
+            logging.error("Invalid request type recieved from client")
             return None
     
 

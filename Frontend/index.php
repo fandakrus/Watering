@@ -63,7 +63,7 @@
             <?php 
             $depth = $conn->query("SELECT id, water_height FROM sensors ORDER BY id DESC LIMIT 1");
             while($row = $depth->fetch_assoc()) {
-                echo "<p class='mdepth fs-1 mb-0'>". $row["water_height"] ." m</p>";
+                echo "<p class='mdepth fs-1 mb-0'>". number_format($row["water_height"], 2) ." cm</p>";
             }
             ?>
         </div>

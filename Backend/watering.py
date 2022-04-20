@@ -134,6 +134,7 @@ class Watering():
         # reads last 20 values measured by sensors
         soil_list, water_list, float_sensor = read_sensor_database(20)
         if True:
+            self.is_watering_automaticaly = True
             return self.water_run()
         else:
             return False
