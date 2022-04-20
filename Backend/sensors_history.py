@@ -113,6 +113,5 @@ def main():
     prepare_graph(data)
     connh.close()
 
-
 if __name__ == "__main__":
     main()

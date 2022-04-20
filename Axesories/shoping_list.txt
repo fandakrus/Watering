@@ -1,4 +1,5 @@
 Board:      https://www.laskakit.cz/espressif-esp32-s2-saola-1r-2-4ghz-wifi-rev--1-2--cp2102/?gclid=Cj0KCQiA09eQBhCxARIsAAYRiymXumCRruT4i_myZy6SmimXV5aD2Sz5wp9_tWJt6ZMqD6QN6EFNA8EaAnJUEALw_wcB
+https://www.aliexpress.com/item/4001364649874.html?spm=a2g0o.cart.0.0.758d3c00GcMQWJ&mp=1
 Anthena setup tutorial:    https://randomnerdtutorials.com/esp32-cam-connect-external-antenna/
 Bread board:   https://www.laskakit.cz/laskkit-half-proto-breadboard/ 
 Wires: ?
