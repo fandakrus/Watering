@@ -1,4 +1,4 @@
-from hcsr04 import HCSR04
+from hcsr04_lib import HCSR04
 from time import sleep
 
 # connects sensor with trig pin on GPI12 and echo pin on GPIO14
