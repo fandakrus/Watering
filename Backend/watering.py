@@ -5,6 +5,7 @@ import json
 
 from config import conn, logging
 from history import CiclesHistory
+from water_fall import WaterFallData
 
 def ping_db(conn):
     try:
@@ -14,21 +15,26 @@ def ping_db(conn):
         conn.reconnect()
 
 
+def process_rain_fall():
+    rain_class = WaterFallData()
+    rain_class.get_html()
+    rain_class.get_record()
+    return rain_class.get_rain_value()
+
+
 def read_sensor_database(limit):
     # get limit rows from database with sensor data 
     # function returns limit of values for soil_hum and water_height from db and one value for last float_sensor
-    soil_list = []
     water_list = []
     ping_db(conn)
     # creates new cursor object to interact with db
     curr = conn.cursor()
     try:
-        curr.execute(f"SELECT id, soil_humidity, water_height FROM sensors ORDER BY id DESC LIMIT {limit}")
+        curr.execute(f"SELECT id, water_height FROM sensors ORDER BY id DESC LIMIT {limit}")
     except mariadb.Error as e:
         logging.error(f"Could not get data from database: {e}")
     # parse values to lists by type to be returned
-    for (id, soil_humidity, water_height) in curr:
-        soil_list.append(soil_humidity)
+    for (id, water_height) in curr:
         water_list.append(water_height)
     # cleare the cursor object to select new data
     curr.fetchall()
@@ -40,7 +46,7 @@ def read_sensor_database(limit):
     id, float_sensor = curr.fetchone()
     curr.fetchall()
     conn.commit()
-    return(soil_list, water_list, float_sensor)
+    return(water_list, float_sensor)
 
 
 def read_controls_database():
@@ -132,7 +138,12 @@ class Watering():
         -> trigger watering function if wanted
         """
         # reads last 20 values measured by sensors
-        soil_list, water_list, float_sensor = read_sensor_database(20)
+        water_list, float_sensor = read_sensor_database(20)
+        try:
+            rain_fall = process_rain_fall()
+        except OSError as e:
+            logging.error(f"Didn't get right rain_fall data from website selector and raise error: {e}")
+            return False
         if True:
             self.is_watering_automaticaly = True
             return self.water_run()
