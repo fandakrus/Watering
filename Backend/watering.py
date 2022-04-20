@@ -212,6 +212,6 @@ class Watering():
 
 if __name__ == '__main__':
     watering = Watering()
-    print(watering.handle_reqular_request("plesk"))
+    print(watering.handle_reqular_request("p"))
     
 
