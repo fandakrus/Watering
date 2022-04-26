@@ -3,16 +3,9 @@ import logging
 import datetime
 import json
 
-from config import conn, logging
+from config import connc, logging
 from history import CiclesHistory
 from water_fall import WaterFallData
-
-def ping_db(conn):
-    try:
-        conn.ping()
-    except mariadb.DatabaseError as e:
-        logging.error(f"Database connetion error occured: {e}, trying to reconenct ...")
-        conn.reconnect()
 
 
 def process_rain_fall():
@@ -26,13 +19,13 @@ def read_sensor_database(limit):
     # get limit rows from database with sensor data 
     # function returns limit of values for soil_hum and water_height from db and one value for last float_sensor
     water_list = []
-    ping_db(conn)
+    conn = connc.get_connecion()
     # creates new cursor object to interact with db
     curr = conn.cursor()
     try:
         curr.execute(f"SELECT id, water_height FROM sensors ORDER BY id DESC LIMIT {limit}")
     except mariadb.Error as e:
-        logging.error(f"Could not get data from database: {e}")
+        logging.error(f"watering.py --- Could not get data from database: {e}")
     # parse values to lists by type to be returned
     for (id, water_height) in curr:
         water_list.append(water_height)
@@ -42,7 +35,7 @@ def read_sensor_database(limit):
     try:
         curr.execute("SELECT id, float_sensor FROM sensors ORDER BY id DESC LIMIT 1")
     except mariadb.Error as e:
-        logging.error(f"Could not get data from database: {e}")
+        logging.error(f"watering.py --- Could not get data from database: {e}")
     id, float_sensor = curr.fetchone()
     curr.fetchall()
     conn.commit()
@@ -51,12 +44,12 @@ def read_sensor_database(limit):
 
 def read_controls_database():
     # return last line from db with conrols records
-    ping_db(conn)
+    conn = connc.get_connecion()
     curr = conn.cursor()
     try:
         curr.execute(f"SELECT id, main_control, water_source, circle1, circle2, circle3, circle4 FROM controls ORDER BY id DESC LIMIT 1")
     except mariadb.Error as e:
-        logging.error(f"Could not get data from database: {e}")
+        logging.error(f"watering.py --- Could not get data from database: {e}")
     # gets tuple of given variables to data
     data = curr.fetchone()
     # cleares connetion for new query
@@ -142,7 +135,7 @@ class Watering():
         try:
             rain_fall = process_rain_fall()
         except OSError as e:
-            logging.error(f"Didn't get right rain_fall data from website selector and raise error: {e}")
+            logging.error(f"watering.py --- Didn't get right rain_fall data from website selector and raise error: {e}")
             return False
         if True:
             self.is_watering_automaticaly = True

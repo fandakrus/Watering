@@ -1,8 +1,9 @@
 import mariadb
-from config import conn, logging
+from config import connc, logging
 
 
 def write_to_database(data):
+    conn = connc.get_connecion()
     curr = conn.cursor()
     # insert values to database
     try:
@@ -10,7 +11,7 @@ def write_to_database(data):
                      (data["soil_humidity"], data["water_height"], data["float_sensor"]))
         logging.info("Sensor data succesfully written in db")
     except mariadb.Error as e:
-        logging.error(f"Could not write into sensors database because of error: {e}")
+        logging.error(f"sensors.py --- Could not write into sensors database because of error: {e}")
     # makes the changes in given database
     conn.commit()
 
@@ -22,7 +23,7 @@ def value_check(value):
     if value > bottom_border and value < upper_border:
         return True
     else:
-        logging.error("Values out of range")
+        logging.error("sensors.py --- Values out of range")
         return False
 
 
@@ -33,7 +34,7 @@ def is_valid(data):
             if data["float_sensor"] == True or data["float_sensor"] == False:
                 return True
     except KeyError:
-        logging.error("Invalid params received")
+        logging.error("sensors.py --- Invalid params received")
         return False
 
 

@@ -1,5 +1,5 @@
 import mariadb
-from config import conn, logging
+from config import connc, logging
 from datetime import datetime
 
 
@@ -15,6 +15,7 @@ class CiclesHistory():
 
     def write_history_database(self, start_time, end_time, circle) -> None:
         # get record for the history db and insert it into db
+        conn = connc.get_connecion()
         curr = conn.cursor()
         try:
             curr.execute("INSERT INTO watering_history(start_time, end_time, circle) VALUES (?, ?, ?)",
