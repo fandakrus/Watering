@@ -17,6 +17,7 @@ moisture_sensor_pin.atten(ADC.ATTN_11DB)
 # connects sensor with trig pin on GPI12 and echo pin on GPIO14
 # timeout set to 20000 for longer distances measurement
 hcsr04_sensor = HCSR04(trigger_pin=12, echo_pin=14, echo_timeout_us=20000)
+float_sensor = Pin(35, Pin.IN, Pin.PULL_DOWN)
 gc.enable()
 wdt = WDT(timeout=20000)
 
@@ -43,7 +44,7 @@ def measure():
     data = {
         "type": 0,
         "soil_humidity": sum(humidity_values) / len(humidity_values),
-        "float_sensor": True,
+        "float_sensor": float_sensor.value(),
         "water_height": well_hight - distance,
         }
     print(f"sending data {data}")
