@@ -51,16 +51,16 @@
     <div class="position-relative my-btn-container">
         <div class="btn-group position-absolut top-0 start-50 translate-middle-x" role="group" aria-label="Basic checkbox toggle button group">
             <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off" <?php echo ($dbvalue[1]==1 ? 'checked' : '');?>>
-            <label class="btn btn-outline-primary" id="btnchecklabel" for="btncheck1">Okruh 1</label>
+            <label class="btn btn-outline-primary <?php echo ($dbvalue[5]==0 ? 'disabled' : '');?>" id="btnchecklabel" for="btncheck1">Okruh 1</label>
             
             <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off" <?php echo ($dbvalue[2]==1 ? 'checked' : '');?>>
-            <label class="btn btn-outline-primary" id="btnchecklabel" for="btncheck2">Okruh 2</label>
+            <label class="btn btn-outline-primary  <?php echo ($dbvalue[5]==0 ? 'disabled' : '');?>" id="btnchecklabel" for="btncheck2">Okruh 2</label>
             
             <input type="checkbox" class="btn-check" id="btncheck3" autocomplete="off" <?php echo ($dbvalue[3]==1 ? 'checked' : '');?>>
-            <label class="btn btn-outline-primary" id="btnchecklabel" for="btncheck3">Okruh 3</label>
+            <label class="btn btn-outline-primary <?php echo ($dbvalue[5]==0 ? 'disabled' : '');?>" id="btnchecklabel" for="btncheck3">Okruh 3</label>
             
             <input type="checkbox" class="btn-check" id="btncheck4" autocomplete="off" <?php echo ($dbvalue[4]==1 ? 'checked' : '');?>>
-            <label class="btn btn-outline-primary" id="btnchecklabel" for="btncheck4">Okruh 4</label>
+            <label class="btn btn-outline-primary  <?php echo ($dbvalue[5]==0 ? 'disabled' : '');?>" id="btnchecklabel" for="btncheck4">Okruh 4</label>
         </div>
     </div> 
     <div id="my-outer">
