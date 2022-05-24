@@ -42,7 +42,7 @@ def select_data(conn):
     """
     curr = conn.cursor()
     try:
-        curr.execute("SELECT AVG(water_height), AVG(soil_humidity) FROM sensors WHERE DATE(meas_date) = SUBDATE(CURDATE(), 1)")
+        curr.execute("SELECT water_height, soil_humidity FROM sensors ORDER BY id DESC LIMIT 1;")
     except mariadb.Error as e:
         logging.error(f"Could not read from sensor_history database because of error: {e}") 
     data = curr.fetchone()
