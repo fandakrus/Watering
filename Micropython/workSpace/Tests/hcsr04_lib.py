@@ -40,6 +40,7 @@ class HCSR04:
         self.trigger.value(0)
         try:
             pulse_time = machine.time_pulse_us(self.echo, 1, self.echo_timeout_us)
+            # print("pulse recieved and pulse time is ", pulse_time)
             return pulse_time
         except OSError as ex:
             if ex.args[0] == 110: # 110 = ETIMEDOUT

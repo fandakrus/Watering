@@ -10,16 +10,16 @@ import json
 from hcsr04_lib import HCSR04
 import gc
 
-well_hight = 200
+well_hight = 150
 # analog output from moisture sensor shut be connected to this pin
 moisture_sensor_pin = ADC(Pin(34))   
 moisture_sensor_pin.atten(ADC.ATTN_11DB)
 # connects sensor with trig pin on GPI12 and echo pin on GPIO14
 # timeout set to 20000 for longer distances measurement
-hcsr04_sensor = HCSR04(trigger_pin=12, echo_pin=14, echo_timeout_us=20000)
+hcsr04_sensor = HCSR04(trigger_pin=12, echo_pin=14, echo_timeout_us=50000)
 float_sensor = Pin(35, Pin.IN, Pin.PULL_DOWN)
 gc.enable()
-wdt = WDT(timeout=20000)
+wdt = WDT(timeout=50000)
 
 
 def value_change(value):
@@ -77,7 +77,7 @@ def do_connect():
     if not sta_if.isconnected():
         print('connecting to network...')
         sta_if.active(True)
-        sta_if.connect('ssid', 'passwd')
+        sta_if.connect('SSID', 'passwd')
         while not sta_if.isconnected():
             pass
     wdt.feed()
