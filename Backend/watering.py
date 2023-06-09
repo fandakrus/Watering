@@ -132,11 +132,11 @@ class Watering():
         """
         # reads last 20 values measured by sensors
         water_list, float_sensor = read_sensor_database(20)
-        try:
-            rain_fall = process_rain_fall()
-        except OSError as e:
-            logging.error(f"watering.py --- Didn't get right rain_fall data from website selector and raise error: {e}")
-            return False
+        # try:
+        #     rain_fall = process_rain_fall()
+        # except OSError as e:
+        #     logging.error(f"watering.py --- Didn't get right rain_fall data from website selector and raise error: {e}")
+        #     return False
         if True:
             self.is_watering_automaticaly = True
             return self.water_run()
@@ -195,10 +195,11 @@ class Watering():
         if(controls_value):
             self.history.decide_history_database(controls_value)
             return check_main_valve(controls_value)
-        auto_value = self.check_auto()
-        if(auto_value):
-            self.history.decide_history_database(auto_value)
-            return check_main_valve(auto_value)
+        # checking if auto value conditions are fullfilled
+        # auto_value = self.check_auto()
+        # if(auto_value):
+        #     self.history.decide_history_database(auto_value)
+        #     return check_main_valve(auto_value)
         self.history.decide_history_database(self.empty_water_dict)
         return check_main_valve(self.empty_water_dict)
         
